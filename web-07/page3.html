@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+   
+        <script>
+
+            if (sessionStorage.getItem('user') == null){
+                alert('กรุณาล็อกอินก่อนเข้าใช้งาน')
+                location.href = './'
+
+
+            }
+
+
+
+        $(function () {
+            $('head').load('head.html')
+            $('#body').load('body.html')
+            $('#foots').load('foot.html')
+        })
+    </script>
+
+<title>Page2</title>
+
+<script>
+    sid = []
+    sname = []
+    dept = []
+
+    if (localStorage.getItem('sid') != null &&
+        localStorage.getItem('sname') != null &&
+        localStorage.getItem('dept') != null) {
+        sid = JSON.parse(localStorage.getItem('sid'))
+        sname = JSON.parse(localStorage.getItem('sname'))
+        dept = JSON.parse(localStorage.getItem('dept'))
+    }
+
+</script>
+
+</head>
+
+<body onload="load_data()">
+<div id="body"></div>
+
+<div class="container d-flex flex-wrap justify-content-center gap-5 mt-5">
+    <!-- <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 80px;">     -->
+    <div class="card" style="width: 100rem;">
+        <img src="https://t4.ftcdn.net/jpg/05/92/94/87/360_F_592948784_HbAPL9yd5OSBlkpCK1hvSkkV8UWwfr60.jpg"
+            class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Student System</h5>
+            <p class="card-text">
+                <button type="button"id="add_data" class="btn btn-primary w-25" onclick="add_data()">Add Data</button>
+            </p>
+            <table id="tb_student"
+                class="table table-bordered border border-dark border-3 table-hover table-striped">
+                <thead class="table-success border-dark">
+                    <tr>
+                        <th>รหัสนักศึกษา</th>
+                        <th>ชื่อ - สกุล</th>
+                        <th>แผนกวิชา</th>
+                        <th class="w-25">...</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    let tb_student = document.getElementById('tb_student').getElementsByTagName('tbody')[0]
+    let row
+
+    function load_data() {
+        tb_student.innerHTML = ''
+        for (let i = 0; i < sid.length; i++) {
+            row = tb_student.insertRow()
+            row.insertCell().innerHTML = sid[i]
+            row.insertCell().innerHTML = sname[i]
+            row.insertCell().innerHTML = dept[i]
+            row.insertCell().innerHTML = '<button type="button" id="btn_edit" class="btn btn-warning mx-2 w-25">Edit</button><button type="button" id="btn_delete" class="btn btn-danger w-25">Delete</button>'
+
+        }
+    }
+
+    function add_data() {
+        row = tb_student.insertRow()
+        row.insertCell().innerHTML = '<div class="form-floating"><input type="number" class="form-control" id="sid" placeholder=""><label>Student ID</label></div>'
+        row.insertCell().innerHTML = '<div class="form-floating "><input type="text" class="form-control" id="sname" placeholder=""><label>Full Name</label></div>'
+        row.insertCell().innerHTML = '<div class="form-floating"><select class="form-select" id="dept" aria-label="Default select example"><option selected>Choose Department</option><option value="ช่างกลโรงงาน">ช่างกลโรงงาน</option><option value="ช่างยนต์">ช่างยนต์</option><option value="เทคโนโลยีสารสนเทศ">เทคโนโลยีสารสนเทศ</option></select></div>'
+        row.insertCell().innerHTML = '<button type="button" class="btn btn-primary" onclick="click_save_add()">Save</button><button type="button" class="btn btn-danger" onclick="click_cancle_add()">Cancle</button>'
+
+        document.getElementById('add_data').disabled = true
+        //document.getElementById('btn_edit').disabled = true
+        //document.getElementById('btn_delete').disabled = true
+        let btn_edit = document.querySelectorAll('#btn_edit, #btn_delete')
+        for (let i = 0; i < btn_edit.length; i++) {
+            btn_edit[i].disabled = true
+        }
+    }
+
+    function click_cancel_add() {
+        tb_student.deleteRow(tb_student.rows.length - 1)
+        document.getElementById('add_data').disabled = false
+        let btn_edit = document.querySelectorAll('#btn_edit, #btn_delete')
+        for (let i = 0; i < btn_edit.length; i++) {
+            btn_edit[i].disabled = false
+        }
+    }
+
+    function click_save_add() {
+
+        if (document.getElementById('sid').value !='' &&
+        document.getElementById('sname').value !=''&&
+        document.getElementById('dept').value != 'Choose department') {
+            sid.push(document.getElementById('sid').value)
+        sname.push(document.getElementById('sname').value)
+        dept.push(document.getElementById('dept').value)
+
+        localStorage.setItem('sid', JSON.stringify(sid))
+        localStorage.setItem('sname', JSON.stringify(sname))
+        localStorage.setItem('dept', JSON.stringify(dept))
+
+        document.getElementById('add_data').disabled = false
+        load_data() 
+        }
+
+
+
+        
+
+      else {
+
+        alert('กรุณาป้อนข้อมูลให้ครบ!!!!!')
+    }}
+
+
+
+
+</script>
+
+
+
+<div id="foots"></div>
+</body>
+
+</html>
